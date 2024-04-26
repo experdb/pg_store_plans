@@ -1615,6 +1615,9 @@ pg_store_plans_internal(FunctionCallInfo fcinfo,
 			else
 				pstr = SHMEM_PLAN_PTR(entry);
 
+			if (pstr == NULL)
+				continue;			/* Ignore any entries with bogus texts */
+
 			switch (plan_format)
 			{
 				case PLAN_FORMAT_TEXT:
