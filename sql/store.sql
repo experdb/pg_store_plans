@@ -1,8 +1,7 @@
 SET client_min_messages = 'error';
 CREATE EXTENSION IF NOT EXISTS pg_store_plans;
 CREATE EXTENSION IF NOT EXISTS pg_stat_statements;
--- ignore the timestamp returned by pg_stat_statement_reset()
-SELECT FROM (SELECT pg_stat_statements_reset());
+SELECT pg_stat_statements_reset() IS NOT NULL AS t;
 SELECT pg_store_plans_reset();
 
 DROP TABLE IF EXISTS t1;
