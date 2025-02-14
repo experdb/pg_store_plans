@@ -944,6 +944,10 @@ pgsp_shmem_shutdown(int code, Datum arg)
 	/* Unlink query-texts file; it's not needed while shutdown */
 	unlink(PGSP_TEXT_FILE);
 
+	if (pbuffer){
+		free(pbuffer);
+		pbuffer = NULL;
+	}
 	return;
 
 error:
@@ -954,6 +958,10 @@ error:
 	if (file)
 		FreeFile(file);
 	unlink(PGSP_DUMP_FILE ".tmp");
+	if (pbuffer){
+		free(pbuffer);
+		pbuffer = NULL;
+	}
 }
 
 
@@ -1725,6 +1733,11 @@ pg_store_plans_internal(FunctionCallInfo fcinfo,
 	}
 
 	LWLockRelease(shared_state->lock);
+
+	if (pbuffer){
+		free(pbuffer);
+		pbuffer = NULL;
+	}
 }
 
 /* Number of output arguments (columns) for pg_stat_statements_info */
