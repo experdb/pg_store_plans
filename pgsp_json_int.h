@@ -2,6 +2,7 @@
  *
  * pgsp_json_int.h: Definitions for internal use for pgsp_json.c
  *
+ * Copyright (c) 2008-2025, PostgreSQL Global Development Group
  * Copyright (c) 2012-2025, NIPPON TELEGRAPH AND TELEPHONE CORPORATION
  *
  * IDENTIFICATION
