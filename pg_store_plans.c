@@ -1251,6 +1251,7 @@ pgsp_store(char *plan, queryid_t queryId,
 		return;
 
 	/* Set up key for hashtable search */
+	memset(&key, 0, sizeof(key));
 	key.userid = GetUserId();
 	key.dbid = MyDatabaseId;
 	key.queryid = queryId;
