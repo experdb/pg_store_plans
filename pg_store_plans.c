@@ -1712,21 +1712,38 @@ pg_store_plans_internal(FunctionCallInfo fcinfo,
 		values[i++] = Int64GetDatumFast(tmp.local_blks_written);
 		values[i++] = Int64GetDatumFast(tmp.temp_blks_read);
 		values[i++] = Int64GetDatumFast(tmp.temp_blks_written);
-		values[i++] = Float8GetDatumFast(tmp.shared_blk_read_time);
-		values[i++] = Float8GetDatumFast(tmp.shared_blk_write_time);
 
 		if (api_version >= PGSP_V1_9)
 		{
 #if PG_VERSION_NUM >= 170000
+			values[i++] = Float8GetDatumFast(tmp.shared_blk_read_time);
+			values[i++] = Float8GetDatumFast(tmp.shared_blk_write_time);
 			values[i++] = Float8GetDatumFast(tmp.local_blk_read_time);
 			values[i++] = Float8GetDatumFast(tmp.local_blk_write_time);
 #else
+			values[i++] = Float8GetDatumFast(0.0);
+			values[i++] = Float8GetDatumFast(0.0);
 			values[i++] = Float8GetDatumFast(0.0);
 			values[i++] = Float8GetDatumFast(0.0);
 #endif
 		}
 		if (api_version >= PGSP_V1_7)
 		{
+#if PG_VERSION_NUM >= 170000
+			if (api_version < PGSP_V1_9)
+			{
+				values[i++] = Float8GetDatumFast(tmp.shared_blk_read_time+
+												 tmp.local_blk_read_time);
+				values[i++] = Float8GetDatumFast(tmp.shared_blk_write_time+
+												 tmp.local_blk_write_time);
+			}
+#else
+			if (api_version < PGSP_V1_9)
+			{
+				values[i++] = Float8GetDatumFast(tmp.blk_read_time);
+				values[i++] = Float8GetDatumFast(tmp.blk_write_time);
+			}
+#endif
 			values[i++] = Float8GetDatumFast(tmp.temp_blk_read_time);
 			values[i++] = Float8GetDatumFast(tmp.temp_blk_write_time);
 		}

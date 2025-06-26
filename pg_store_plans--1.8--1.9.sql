@@ -1,70 +1,19 @@
 /*
- * pg_store_plans/pg_store_plans--1.9.sql
+ * pg_store_plans/pg_store_plans--1.8--1.9.sql
  *
- * 확장 설치용 SQL 스크립트 (버전 1.9)
+ * 업그레이드 스크립트: pg_store_plans 1.8 -> 1.9
  *
- * - 주요 함수 및 뷰 생성
- * - PostgreSQL 17 이상/미만 버전별 함수(분기 처리) 생성
- * - 권한 부여
+ * - 기존 함수 및 뷰 삭제
+ * - PostgreSQL 17 이상/미만 버전별 함수(분기 처리) 재생성
+ * - 뷰 생성 및 권한 부여
  */
 
 -- psql에서 직접 실행되는 것을 방지 (CREATE EXTENSION을 통해서만 실행)
 \echo Use "CREATE EXTENSION pg_store_plans" to load this file. \quit
 
---- pg_store_plans_info 함수 및 뷰 정의 (통계 정보 제공)
-CREATE FUNCTION pg_store_plans_info(
-    OUT dealloc bigint,
-    OUT stats_reset timestamp with time zone
-)
-RETURNS record
-AS 'MODULE_PATHNAME'
-LANGUAGE C STRICT VOLATILE PARALLEL SAFE;
-
-CREATE VIEW pg_store_plans_info AS
-  SELECT * FROM pg_store_plans_info();
-
-GRANT SELECT ON pg_store_plans_info TO PUBLIC;
-
--- 주요 기능 함수 등록 (플랜 리셋, 쿼리 축약, 정규화, 다양한 포맷 변환 등)
-CREATE FUNCTION pg_store_plans_reset()
-RETURNS void
-AS 'MODULE_PATHNAME'
-LANGUAGE C PARALLEL SAFE;
-CREATE FUNCTION pg_store_plans_shorten(text)
-RETURNS text
-AS 'MODULE_PATHNAME'
-LANGUAGE C
-RETURNS NULL ON NULL INPUT PARALLEL SAFE;
-CREATE FUNCTION pg_store_plans_normalize(text)
-RETURNS text
-AS 'MODULE_PATHNAME'
-LANGUAGE C
-RETURNS NULL ON NULL INPUT PARALLEL SAFE;
-CREATE FUNCTION pg_store_plans_jsonplan(text)
-RETURNS text
-AS 'MODULE_PATHNAME'
-LANGUAGE C
-RETURNS NULL ON NULL INPUT PARALLEL SAFE;
-CREATE FUNCTION pg_store_plans_textplan(text)
-RETURNS text
-AS 'MODULE_PATHNAME'
-LANGUAGE C
-RETURNS NULL ON NULL INPUT PARALLEL SAFE;
-CREATE FUNCTION pg_store_plans_yamlplan(text)
-RETURNS text
-AS 'MODULE_PATHNAME'
-LANGUAGE C
-RETURNS NULL ON NULL INPUT PARALLEL SAFE;
-CREATE FUNCTION pg_store_plans_xmlplan(text)
-RETURNS text
-AS 'MODULE_PATHNAME'
-LANGUAGE C
-RETURNS NULL ON NULL INPUT PARALLEL SAFE;
-CREATE FUNCTION pg_store_plans_hash_query(text)
-RETURNS oid
-AS 'MODULE_PATHNAME'
-LANGUAGE C
-RETURNS NULL ON NULL INPUT PARALLEL SAFE;
+-- 기존 뷰 및 함수 삭제 (업그레이드 전 정리)
+DROP VIEW pg_store_plans;
+DROP FUNCTION pg_store_plans();
 
 -- PostgreSQL 버전에 따라 메인 함수 생성 (17 이상/미만 분기)
 DO
@@ -154,6 +103,3 @@ CREATE VIEW pg_store_plans AS
 
 -- 모든 사용자에게 SELECT 권한 부여
 GRANT SELECT ON pg_store_plans TO PUBLIC;
-
--- superuser가 아닌 사용자에게는 리셋 함수 권한 제한
-REVOKE ALL ON FUNCTION pg_store_plans_reset() FROM PUBLIC;
