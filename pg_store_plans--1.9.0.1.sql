@@ -1,9 +1,17 @@
-/* pg_store_plans/pg_store_plans--1.9.sql */
+/*
+ * pg_store_plans/pg_store_plans--1.9.0.1.sql
+ *
+ * 확장 설치 및 업그레이드용 SQL 스크립트 (버전 1.9.0.1)
+ *
+ * - 주요 함수 및 뷰 정의
+ * - PostgreSQL 17 이상/미만 버전별 함수 분기 처리
+ * - 권한 및 보안 정책 적용
+ */
 
--- complain if script is sourced in psql, rather than via CREATE EXTENSION
+-- psql에서 직접 실행되는 것을 방지 (CREATE EXTENSION을 통해서만 실행)
 \echo Use "CREATE EXTENSION pg_store_plans" to load this file. \quit
 
---- Define pg_store_plans_info
+--- pg_store_plans_info 함수 및 뷰 정의 (통계 정보 제공)
 CREATE FUNCTION pg_store_plans_info(
     OUT dealloc bigint,
     OUT stats_reset timestamp with time zone
@@ -17,7 +25,7 @@ CREATE VIEW pg_store_plans_info AS
 
 GRANT SELECT ON pg_store_plans_info TO PUBLIC;
 
--- Register functions.
+-- 주요 기능 함수 등록 (플랜 리셋, 쿼리 축약, 정규화, 다양한 포맷 변환 등)
 CREATE FUNCTION pg_store_plans_reset()
 RETURNS void
 AS 'MODULE_PATHNAME'
@@ -57,10 +65,13 @@ RETURNS oid
 AS 'MODULE_PATHNAME'
 LANGUAGE C
 RETURNS NULL ON NULL INPUT PARALLEL SAFE;
+
+-- PostgreSQL 버전에 따라 메인 함수 정의 (17 이상/미만 분기)
 DO
 $$
 BEGIN
     IF (SELECT split_part(setting,'.',1) FROM pg_settings WHERE name = 'server_version')::int >= 17 THEN
+        -- PostgreSQL 17 이상: shared/local 블록 시간 컬럼 분리
         CREATE FUNCTION pg_store_plans(
             OUT userid oid,
             OUT dbid oid,
@@ -98,6 +109,7 @@ BEGIN
         LANGUAGE C
         VOLATILE PARALLEL SAFE;
     ELSE
+        -- PostgreSQL 17 미만: blk_read_time, blk_write_time 사용
         CREATE FUNCTION pg_store_plans(
             OUT userid oid,
             OUT dbid oid,
@@ -136,11 +148,12 @@ BEGIN
 END
 $$ LANGUAGE plpgsql;
 
--- Register a view on the function for ease of use.
+-- 메인 함수에 대한 뷰 생성 (사용 편의성 제공)
 CREATE VIEW pg_store_plans AS
   SELECT * FROM pg_store_plans();
 
+-- 모든 사용자에게 SELECT 권한 부여
 GRANT SELECT ON pg_store_plans TO PUBLIC;
 
--- Don't want this to be available to non-superusers.
+-- superuser가 아닌 사용자에게는 리셋 함수 권한 제한
 REVOKE ALL ON FUNCTION pg_store_plans_reset() FROM PUBLIC;
