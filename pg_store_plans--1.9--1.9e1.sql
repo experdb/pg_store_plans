@@ -1,7 +1,7 @@
 /*
- * pg_store_plans/pg_store_plans--1.8--1.9.sql
+ * pg_store_plans/pg_store_plans--1.9--1.9e1.sql
  *
- * 업그레이드 스크립트: pg_store_plans 1.8 -> 1.9
+ * 업그레이드 스크립트: pg_store_plans 1.9 -> 1.9e1
  *
  * - 기존 함수 및 뷰 삭제
  * - PostgreSQL 17 이상/미만 버전별 함수(분기 처리) 재생성

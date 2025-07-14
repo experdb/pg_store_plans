@@ -1,7 +1,7 @@
 /*
- * pg_store_plans/pg_store_plans--1.9.sql
+ * pg_store_plans/pg_store_plans--1.9e1.sql
  *
- * 확장 설치용 SQL 스크립트 (버전 1.9)
+ * 확장 설치용 SQL 스크립트 (버전 1.9e1)
  *
  * - 주요 함수 및 뷰 생성
  * - PostgreSQL 17 이상/미만 버전별 함수(분기 처리) 생성
