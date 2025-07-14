@@ -1,26 +1,26 @@
 /*
- * pg_store_plans/pg_store_plans--1.8--1.9.sql
+ * pg_store_plans/pg_store_plans--1.9--1.9e1.sql
  *
- * 업그레이드 스크립트: pg_store_plans 1.8 -> 1.9
+ * Upgrade script: pg_store_plans 1.9 -> 1.9e1
  *
- * - 기존 함수 및 뷰 삭제
- * - PostgreSQL 17 이상/미만 버전별 함수(분기 처리) 재생성
- * - 뷰 생성 및 권한 부여
+ * - Drop existing functions and views
+ * - Recreate functions with PostgreSQL version branching (17+/below)
+ * - Create views and grant permissions
  */
 
--- psql에서 직접 실행되는 것을 방지 (CREATE EXTENSION을 통해서만 실행)
+-- Prevent direct execution in psql (only through CREATE EXTENSION)
 \echo Use "CREATE EXTENSION pg_store_plans" to load this file. \quit
 
--- 기존 뷰 및 함수 삭제 (업그레이드 전 정리)
+-- Drop existing views and functions
 DROP VIEW pg_store_plans;
 DROP FUNCTION pg_store_plans();
 
--- PostgreSQL 버전에 따라 메인 함수 생성 (17 이상/미만 분기)
+-- Create main function based on PostgreSQL version (17+/below branching)
 DO
 $$
 BEGIN
     IF (SELECT split_part(setting,'.',1) FROM pg_settings WHERE name = 'server_version')::int >= 17 THEN
-        -- PostgreSQL 17 이상: shared/local 블록 시간 컬럼 분리
+        -- PostgreSQL 17+: separate shared/local block time columns
         CREATE FUNCTION pg_store_plans(
             OUT userid oid,
             OUT dbid oid,
@@ -58,7 +58,7 @@ BEGIN
         LANGUAGE C
         VOLATILE PARALLEL SAFE;
     ELSE
-        -- PostgreSQL 17 미만: blk_read_time, blk_write_time 사용
+        -- PostgreSQL 17 below: use blk_read_time, blk_write_time
         CREATE FUNCTION pg_store_plans(
             OUT userid oid,
             OUT dbid oid,
@@ -97,9 +97,9 @@ BEGIN
 END
 $$ LANGUAGE plpgsql;
 
--- 메인 함수에 대한 뷰 생성 (사용 편의성 제공)
+-- Create view for the main function
 CREATE VIEW pg_store_plans AS
   SELECT * FROM pg_store_plans();
 
--- 모든 사용자에게 SELECT 권한 부여
+-- Grant SELECT permission to all users
 GRANT SELECT ON pg_store_plans TO PUBLIC;

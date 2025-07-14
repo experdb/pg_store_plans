@@ -1,7 +1,7 @@
 # pg_stat_plan/Makefile
 
 MODULES = pg_store_plans
-STOREPLANSVER = 1.9
+STOREPLANSVER = 1.9e1
 
 MODULE_big = pg_store_plans
 OBJS = pg_store_plans.o pgsp_json.o pgsp_json_text.o pgsp_explain.o
@@ -10,8 +10,9 @@ EXTENSION = pg_store_plans
 
 PG_VERSION := $(shell pg_config --version | sed "s/^PostgreSQL //" | sed "s/\.[0-9]*$$//")
 
-DATA = pg_store_plans--1.9.sql \
-	   pg_store_plans--1.8--1.9.sql
+DATA = pg_store_plans--1.9e1.sql \
+       pg_store_plans--1.9--1.9e1.sql \
+       pg_store_plans--1.8--1.9e1.sql
 
 REGRESS = convert store
 REGRESS_OPTS = --temp-config=regress.conf
