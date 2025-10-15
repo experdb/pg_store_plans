@@ -18,7 +18,7 @@
 Summary:    Record executed plans on PostgreSQL 17
 Name:       pg_store_plans17
 Version:    1.9
-Release:    1%{?dist}
+Release:    2%{?dist}
 License:    BSD
 Group:      Applications/Databases
 Source0:    %{name}-%{version}.tar.gz
