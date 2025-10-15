@@ -1,12 +1,13 @@
 # SPEC file for pg_store_plans
 # Copyright(c) 2025, NIPPON TELEGRAPH AND TELEPHONE CORPORATION
 
-%define _pgdir   /usr/pgsql-17
-%define _bindir  %{_pgdir}/bin
-%define _libdir  %{_pgdir}/lib
-%define _datadir %{_pgdir}/share
-%define _bcdir %{_libdir}/bitcode
-%define _mybcdir %{_bcdir}/pg_store_plans
+%global pgdir   /usr/pgsql-17
+%global pg_bindir  %{pgdir}/bin
+%global pg_libdir  %{pgdir}/lib
+%global pg_datadir %{pgdir}/share
+%global pg_bcdir %{pg_libdir}/bitcode
+%global pg_mybcdir %{pg_bcdir}/pg_store_plans
+%global __brp_check_rpaths %{nil}
 
 %if "%(echo ${MAKE_ROOT})" != ""
   %define _rpmdir %(echo ${MAKE_ROOT})/RPMS
@@ -60,28 +61,28 @@ if [ ! -d %{_rpmdir} ]; then mkdir -p %{_rpmdir}; fi
 %build
 PATH=/usr/pgsql-17/bin:$PATH
 pg_config
-make USE_PGXS=1 %{?_smp_mflags}
+make USE_PGXS=1 PG_CONFIG=%{pg_bindir}/pg_config %{?_smp_mflags}
 
 ## Set variables for install
 %install
 rm -rf %{buildroot}
 PATH=/usr/pgsql-17/bin:$PATH
-make install DESTDIR=%{buildroot}
+make USE_PGXS=1 PG_CONFIG=%{pg_bindir}/pg_config DESTDIR=%{buildroot} install
 
 %clean
 rm -rf %{buildroot}
 
 %files
 %defattr(0755,root,root)
-%{_libdir}/pg_store_plans.so
+%{pg_libdir}/pg_store_plans.so
 %defattr(0644,root,root)
-%{_datadir}/extension/pg_store_plans--1.9.sql
-%{_datadir}/extension/pg_store_plans.control
+%{pg_datadir}/extension/pg_store_plans--1.9.sql
+%{pg_datadir}/extension/pg_store_plans.control
 
 %files llvmjit
 %defattr(0644,root,root)
-%{_bcdir}/pg_store_plans.index.bc
-%{_mybcdir}/*.bc
+%{pg_bcdir}/pg_store_plans.index.bc
+%{pg_mybcdir}/*.bc
 
 # History of pg_store_plans.
 %changelog
