@@ -1,4 +1,4 @@
-/* pg_store_plans/pg_store_plans--1.9.sql */
+/* pg_store_plans/pg_store_plans--1.10.sql */
 
 -- complain if script is sourced in psql, rather than via CREATE EXTENSION
 \echo Use "CREATE EXTENSION pg_store_plans" to load this file. \quit
@@ -90,7 +90,7 @@ CREATE FUNCTION pg_store_plans(
     OUT last_call timestamptz
 )
 RETURNS SETOF record
-AS 'MODULE_PATHNAME', 'pg_store_plans_1_9'
+AS 'MODULE_PATHNAME', 'pg_store_plans_1_10'
 LANGUAGE C
 VOLATILE PARALLEL SAFE;
 
