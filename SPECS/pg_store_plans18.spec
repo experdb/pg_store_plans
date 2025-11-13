@@ -1,7 +1,7 @@
 # SPEC file for pg_store_plans
 # Copyright(c) 2025, NIPPON TELEGRAPH AND TELEPHONE CORPORATION
 
-%global pgdir   /usr/pgsql-17
+%global pgdir   /usr/pgsql-18
 %global pg_bindir  %{pgdir}/bin
 %global pg_libdir  %{pgdir}/lib
 %global pg_datadir %{pgdir}/share
@@ -15,9 +15,9 @@
 %endif
 
 ## Set general information for pg_store_plans.
-Summary:    Record executed plans on PostgreSQL 17
-Name:       pg_store_plans17
-Version:    1.9
+Summary:    Record executed plans on PostgreSQL 18
+Name:       pg_store_plans18
+Version:    1.10
 Release:    2%{?dist}
 License:    BSD
 Group:      Applications/Databases
@@ -27,8 +27,8 @@ BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u} -n)
 Vendor:     NIPPON TELEGRAPH AND TELEPHONE CORPORATION
 
 ## We use postgresql-devel package
-BuildRequires:  postgresql17-devel
-Requires:  postgresql17-libs
+BuildRequires:  postgresql18-devel
+Requires:  postgresql18-libs
 
 ## Description for "pg_store_plans"
 %description
@@ -36,19 +36,19 @@ Requires:  postgresql17-libs
 pg_store_plans provides capability to record statistics for every plan
 executed on PostgreSQL.
 
-Note that this package is available for only PostgreSQL 17.
+Note that this package is available for only PostgreSQL 18.
 
 %package llvmjit
-Requires: postgresql17-server, postgresql17-llvmjit
-Requires: pg_store_plans17 = 1.9
-Summary:  Just-in-time compilation support for pg_store_plans17
+Requires: postgresql18-server, postgresql18-llvmjit
+Requires: pg_store_plans18 = 1.10
+Summary:  Just-in-time compilation support for pg_store_plans18
 
 %description llvmjit
-Just-in-time compilation support for pg_store_plans17
+Just-in-time compilation support for pg_store_plans18
 
 ## pre work for build pg_store_plans
 %prep
-PATH=/usr/pgsql-17/bin:$PATH
+PATH=/usr/pgsql-18/bin:$PATH
 if [ "${MAKE_ROOT}" != "" ]; then
   pushd ${MAKE_ROOT}
   make clean %{name}-%{version}.tar.gz
@@ -59,14 +59,14 @@ if [ ! -d %{_rpmdir} ]; then mkdir -p %{_rpmdir}; fi
 
 ## Set variables for build environment
 %build
-PATH=/usr/pgsql-17/bin:$PATH
+PATH=/usr/pgsql-18/bin:$PATH
 pg_config
 make USE_PGXS=1 PG_CONFIG=%{pg_bindir}/pg_config %{?_smp_mflags}
 
 ## Set variables for install
 %install
 rm -rf %{buildroot}
-PATH=/usr/pgsql-17/bin:$PATH
+PATH=/usr/pgsql-18/bin:$PATH
 make USE_PGXS=1 PG_CONFIG=%{pg_bindir}/pg_config DESTDIR=%{buildroot} install
 
 %clean
@@ -76,7 +76,7 @@ rm -rf %{buildroot}
 %defattr(0755,root,root)
 %{pg_libdir}/pg_store_plans.so
 %defattr(0644,root,root)
-%{pg_datadir}/extension/pg_store_plans--1.9.sql
+%{pg_datadir}/extension/pg_store_plans--1.10.sql
 %{pg_datadir}/extension/pg_store_plans.control
 
 %files llvmjit
@@ -86,6 +86,8 @@ rm -rf %{buildroot}
 
 # History of pg_store_plans.
 %changelog
+* Fri Dec 19 2025 Kyotaro Horiguchi
+- Version 1.10. Support PostgreSQL 18.
 * Mon Jan 20 2025 Kyotaro Horiguchi
 - Version 1.9. Support PostgreSQL 17.
 * Fri Feb 02 2024 Kyotaro Horiguchi
