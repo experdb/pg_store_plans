@@ -114,7 +114,8 @@ typedef enum pgspVersion
 	PGSP_V1_6,
 	PGSP_V1_7,
 	/* PGSP_V1_7 interface is used for v1.8 */
-	PGSP_V1_9
+	PGSP_V1_9,
+	PGSP_V1_10
 } pgspVersion;
 
 /*
@@ -339,6 +340,7 @@ PG_FUNCTION_INFO_V1(pg_store_plans);
 PG_FUNCTION_INFO_V1(pg_store_plans_1_6);
 PG_FUNCTION_INFO_V1(pg_store_plans_1_7);
 PG_FUNCTION_INFO_V1(pg_store_plans_1_9);
+PG_FUNCTION_INFO_V1(pg_store_plans_1_10);
 PG_FUNCTION_INFO_V1(pg_store_plans_shorten);
 PG_FUNCTION_INFO_V1(pg_store_plans_normalize);
 PG_FUNCTION_INFO_V1(pg_store_plans_jsonplan);
@@ -1451,11 +1453,20 @@ pg_store_plans_reset(PG_FUNCTION_ARGS)
 #define PG_STORE_PLANS_COLS_V1_6	26
 #define PG_STORE_PLANS_COLS_V1_7	28
 #define PG_STORE_PLANS_COLS_V1_9	30
+#define PG_STORE_PLANS_COLS_V1_10	30
 #define PG_STORE_PLANS_COLS			30	/* maximum of above */
 
 /*
  * Retrieve statement statistics.
  */
+Datum
+pg_store_plans_1_10(PG_FUNCTION_ARGS)
+{
+	pg_store_plans_internal(fcinfo, PGSP_V1_10);
+
+	return (Datum) 0;
+}
+
 Datum
 pg_store_plans_1_9(PG_FUNCTION_ARGS)
 {
@@ -1756,6 +1767,7 @@ pg_store_plans_internal(FunctionCallInfo fcinfo,
 					 api_version == PGSP_V1_6 ? PG_STORE_PLANS_COLS_V1_6 :
 					 api_version == PGSP_V1_7 ? PG_STORE_PLANS_COLS_V1_7 :
 					 api_version == PGSP_V1_9 ? PG_STORE_PLANS_COLS_V1_9 :
+					 api_version == PGSP_V1_10 ? PG_STORE_PLANS_COLS_V1_10 :
 					 -1 /* fail if you forget to update this assert */ ));
 
 		tuplestore_putvalues(tupstore, tupdesc, values, nulls);
