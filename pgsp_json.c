@@ -254,7 +254,7 @@ word_table nodetypes[] =
 	{T_Invalid,		NULL, NULL, NULL, false, NULL, NULL}
 };
 
-word_table directions[] =
+static word_table directions[] =
 {
 	{T_Invalid,  "b" ,"Backward",	"Backward", false, NULL, NULL},
 	{T_Invalid,  "n" ,"NoMovement","",			false, NULL, NULL},
@@ -262,7 +262,7 @@ word_table directions[] =
 	{T_Invalid, NULL , NULL,		NULL,		false, NULL, NULL}
 };
 
-word_table relationships[] =
+static word_table relationships[] =
 {
 	{T_Invalid,  "o" ,"Outer", NULL, false, NULL, NULL},
 	{T_Invalid,  "i" ,"Inner", NULL, false, NULL, NULL},
@@ -282,7 +282,7 @@ word_table strategies[] =
 	{S_Invalid,	NULL, NULL, NULL, false, NULL, NULL}
 };
 
-word_table operations[] =
+static word_table operations[] =
 {
 	{T_Invalid,  "i" ,"Insert", NULL, false, NULL, NULL},
 	{T_Invalid,  "d" ,"Delete", NULL, false, NULL, NULL},
@@ -290,7 +290,7 @@ word_table operations[] =
 	{T_Invalid, NULL, NULL, NULL, false, NULL, NULL}
 };
 
-word_table jointypes[] =
+static word_table jointypes[] =
 {
 	{T_Invalid,  "i" ,"Inner", NULL, false, NULL, NULL},
 	{T_Invalid,  "l" ,"Left", NULL, false, NULL, NULL},
@@ -301,7 +301,7 @@ word_table jointypes[] =
 	{T_Invalid, NULL, NULL, NULL, false, NULL, NULL}
 };
 
-word_table setsetopcommands[] =
+static word_table setsetopcommands[] =
 {
 	{T_Invalid,  "i" ,"Intersect", NULL, false, NULL, NULL},
 	{T_Invalid,  "I" ,"Intersect All", NULL, false, NULL, NULL},
@@ -310,7 +310,7 @@ word_table setsetopcommands[] =
 	{T_Invalid, NULL, NULL, NULL, false, NULL, NULL}
 };
 
-word_table sortmethods[] =
+static word_table sortmethods[] =
 {
 	{T_Invalid,  "h" ,"top-N heapsort", NULL, false, NULL, NULL},
 	{T_Invalid,  "q" ,"quicksort", NULL, false, NULL, NULL},
@@ -320,14 +320,14 @@ word_table sortmethods[] =
 	{T_Invalid, NULL, NULL, NULL, false, NULL, NULL}
 };
 
-word_table sortspacetype[] =
+static word_table sortspacetype[] =
 {
 	{T_Invalid,  "d" ,"Disk",	NULL, false, NULL, NULL},
 	{T_Invalid,  "m" ,"Memory",NULL, false, NULL, NULL},
 	{T_Invalid, NULL, NULL, NULL, false, NULL, NULL}
 };
 
-word_table partialmode[] =
+static word_table partialmode[] =
 {
 	{T_Invalid,  "p" ,"Partial",	NULL, false, NULL, NULL},
 	{T_Invalid,  "f" ,"Finalize",NULL, false, NULL, NULL},
