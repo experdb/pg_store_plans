@@ -1,4 +1,5 @@
 # pg_stat_plan/Makefile
+# Copyright (c) 2012-2025, NTT, Inc.
 
 MODULES = pg_store_plans
 STOREPLANSVER = 1.10

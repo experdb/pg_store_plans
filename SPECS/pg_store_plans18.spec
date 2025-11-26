@@ -1,5 +1,5 @@
 # SPEC file for pg_store_plans
-# Copyright(c) 2025, NIPPON TELEGRAPH AND TELEPHONE CORPORATION
+# Copyright(c) 2025, NTT, Inc.
 
 %global pgdir   /usr/pgsql-18
 %global pg_bindir  %{pgdir}/bin
@@ -24,7 +24,6 @@ Group:      Applications/Databases
 Source0:    %{name}-%{version}.tar.gz
 #URL:        http://example.com/pg_store_plans/
 BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u} -n)
-Vendor:     NIPPON TELEGRAPH AND TELEPHONE CORPORATION
 
 ## We use postgresql-devel package
 BuildRequires:  postgresql18-devel
