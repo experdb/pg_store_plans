@@ -1612,6 +1612,14 @@ pg_store_plans_internal(FunctionCallInfo fcinfo,
 			else
 				pstr = SHMEM_PLAN_PTR(entry);
 
+			/*
+			 * If the on-disk storage is corrupted (e.g., due to version
+			 * mismatch), ptext_fetch() may return NULL even for a valid shared
+			 * memory entry.  Skip such entries to avoid a segmentation fault.
+			 */
+			if (pstr == NULL)
+				continue;
+
 			switch (plan_format)
 			{
 				case PLAN_FORMAT_TEXT:
