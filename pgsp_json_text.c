@@ -822,7 +822,7 @@ json_text_objend(void *state)
 		/* Copy sort key if any */
 		if (v->sort_key->data[0])
 		{
-			ctx->tmp_gset->sort_keys = strdup(v->sort_key->data);
+			ctx->tmp_gset->sort_keys = pstrdup(v->sort_key->data);
 			resetStringInfo(v->sort_key);
 		}
 
