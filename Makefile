@@ -15,6 +15,7 @@ DATA = pg_store_plans--1.10.sql
 
 REGRESS = convert store
 REGRESS_OPTS = --temp-config=regress.conf
+EXTRA_INSTALL = contrib/pg_stat_statements
 ifdef USE_PGXS
 PG_CONFIG = pg_config
 PGXS := $(shell $(PG_CONFIG) --pgxs)
@@ -34,8 +35,11 @@ TARSOURCES = Makefile *.c  *.h \
 	pg_store_plans.control \
 	docs/* expected/*.out sql/*.sql \
 
-ifneq ($(shell uname), SunOS)
+UNAME_S := $(shell uname)
+ifneq ($(UNAME_S), SunOS)
+ifneq ($(UNAME_S), Darwin)
 LDFLAGS+=-Wl,--build-id
+endif
 endif
 
 ## These entries need running server
